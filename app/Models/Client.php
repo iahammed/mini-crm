@@ -19,5 +19,5 @@ class Client extends Model
     public function path()
     {
         return "/client/{$this->id}";
-    }
+    }    
 }

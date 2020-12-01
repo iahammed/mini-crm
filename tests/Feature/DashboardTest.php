@@ -26,8 +26,7 @@ class DashboardTest extends TestCase
     }
     public function test_authorize_access_to_dashboard()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $this->actingAs(User::factory()->create());
         $this->get('/dashboard')->assertStatus(200);
     }
 

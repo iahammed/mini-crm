@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Client;
 
-class ClientController extends Controller
+use App\Models\Transaction;
+
+class TransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +15,8 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = Client::all();
-        return view('client.index', compact('clients'));
+        $transactions =  Transaction::all();
+        return view('transaction.index', compact('transactions'));
     }
 
     /**
@@ -36,19 +37,21 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        // validate data
+        // Validate
         $validatedData = $request->validate([
-            'first_name'    => ['required', 'max:50'],
-            'last_name'     => ['required', 'max:50'],
-            'email'         => ['required', 'unique:clients'],
-            'avatar'        => ['required', 'max:50'],
+            'client_id'         => ['required', 'max:50'],
+            'transaction_date'  => ['required', 'max:50'],
+            'amount'            => ['required', 'unique:clients'],
         ]);
 
+        // dd($validatedData->transaction_date);
 
-        // persiste it
-        Client::create($validatedData);
-        // redirect
-        return redirect('/client');
+        // Persist Data
+        Transaction::create($validatedData);
+
+        // Redirect
+
+        return redirect ('/transaction');
     }
 
     /**
@@ -59,8 +62,9 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        $client = Client::findOrFail($id);
-        return view('client.detail', compact('client'));
+        $transaction = Transaction::findOrFail($id);
+
+        return view('transaction.detail', compact('transaction'));
     }
 
     /**

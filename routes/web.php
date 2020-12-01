@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,10 @@ Route::get('dashboard', function(){
     return view('auth.dashboard');
 })->middleware('auth');
 
-Route::post('client',[ClientController::class, 'store'])->middleware('auth');
-Route::get('/client',[ClientController::class, 'index'])->middleware('auth');
+Route::post('client', [ClientController::class, 'store'])->middleware('auth');
+Route::get('/client', [ClientController::class, 'index'])->middleware('auth');
 Route::get('/client/{client}', [ClientController::class, 'show'])->middleware('auth');
+
+Route::get('transaction', [TransactionController::class, 'index'])->middleware('auth');
+Route::post('transaction', [TransactionController::class, 'store'])->middleware('auth');
+Route::get('transaction/{transaction}', [TransactionController::class, 'show'])->middleware('auth');

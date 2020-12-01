@@ -29,10 +29,10 @@ class ClientTest extends TestCase
         $response = $this->get('/client')->assertRedirect('/login');
     }
 
-    public function test_user_can_create_client()
+    public function test_admin_user_can_create_client()
     {
         $this->withoutExceptionHandling();
-        $this->authorize_a_user();
+        $this->actingAs(User::factory()->create());
         $attrtibutes = Client::factory()->raw();
         $this->post('/client', $attrtibutes)->assertRedirect('/client');
         $this->assertDatabaseHas('clients', $attrtibutes);
@@ -41,14 +41,14 @@ class ClientTest extends TestCase
     
     public function test_create_client_require_fields_validation_check()
     {
-        $this->authorize_a_user();
+        $this->actingAs(User::factory()->create());
         $this->post('/client', [])->assertSessionHasErrors(['first_name','last_name','email', 'avatar']);
     }
 
     public function test_admin_can_view_client_detail()
     {
         $this->withoutExceptionHandling();
-        $this->authorize_a_user();
+        $this->actingAs(User::factory()->create());
         $client = Client::factory()->create();
         $this->get($client->path())
                 ->assertSee($client->first_name)
@@ -56,14 +56,5 @@ class ClientTest extends TestCase
                 ->assertSee($client->email)
                 ->assertSee($client->avatar);
     }
-    /**
-     *  Basic function to Authorize a user
-     *  
-     *  @return void
-     */
-    public function authorize_a_user()
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-    }
+
 }
