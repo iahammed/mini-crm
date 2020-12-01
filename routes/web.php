@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,18 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/login', [LoginController::class, 'loginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'authenticate']);
+Route::get('/logout', function(){
+    Auth::logout();
+    return redirect('login');
+})->middleware('auth');
+
+Route::get('dashboard', function(){
+    return view('auth.dashboard');
+})->middleware('auth');
+
+Route::post('client',[ClientController::class, 'store'])->middleware('auth');
+Route::get('/client',[ClientController::class, 'index'])->middleware('auth');
+Route::get('/client/{client}', [ClientController::class, 'show'])->middleware('auth');
