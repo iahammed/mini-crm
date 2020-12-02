@@ -2,7 +2,7 @@
 @section('content')
 <form class="form-signin" action ="/login", method="post">
 	@csrf
-	<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+	<h1 class="h3 mb-3 font-weight-normal">Please Login</h1>
 	<label for="inputEmail" class="sr-only">Email address</label>
 	<input 
 		type="email" 
@@ -20,6 +20,6 @@
 		placeholder="Password" 
 		required>
 	<div class="checkbox mb-3">
-	<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>	
+	<button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>	
 </form>
 @endsection

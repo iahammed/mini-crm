@@ -31,14 +31,19 @@
             <li class="nav-item">
                 <a class="nav-link" href="/transaction">Transactions</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
         </ul>
     </div>
     @else
+    <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">    
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" href="/login">Login</a>
             </li>
         </ul>
+    </div>
     @endif
 </nav>
 

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +28,7 @@ Route::get('/logout', function(){
     return redirect('login');
 })->middleware('auth');
 
-Route::get('dashboard', function(){
-    return view('auth.dashboard');
-})->middleware('auth');
+Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth');
 
 Route::post('client', [ClientController::class, 'store'])->middleware('auth');
 Route::get('/client', [ClientController::class, 'index'])->middleware('auth');

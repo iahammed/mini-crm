@@ -25,4 +25,11 @@ class Transaction extends Model
         return "/transaction/{$this->id}";
     }
 
+    /**
+     * Get the client that owns the Transaction.
+     */
+    public function client()
+    {
+        return $this->belongsTo('App\Models\Client');
+    } 
 }
