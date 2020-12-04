@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Client;
+
 
 class ClientController extends Controller
 {
@@ -41,15 +43,15 @@ class ClientController extends Controller
             'first_name'    => ['required', 'max:50'],
             'last_name'     => ['required', 'max:50'],
             'email'         => ['required', 'email', 'unique:clients'],
-            // 'avatar'        => ['required', 'file','dimensions: min_width = 100, min_height = 100'],
-            'avatar'        => ['required'],
+            'avatar'        => ['required', 'file','dimensions: min_width = 100, min_height = 100'],
+            // 'avatar'        => ['required'],
         ]);
         $validatedData['avatar'] = request('avatar')->store('public');
-        // $validatedData['avatar'] = $request->avatar->getClientOriginalName();
-        Client::create($validatedData);
-        // redirect
+        $data = Client::create($validatedData);
+
         return redirect()->route('client.index')
-            ->with('success', 'Client created successfully.');
+            ->with('success', 'Client created successfully.')
+            ->with('data', $data);
     }
 
     /**
@@ -104,10 +106,9 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
+        Storage::delete($client->avatar);
         $client->delete();
-
         return redirect()->route('client.index')
             ->with('success', 'Client deleted successfully');
-        
     }
 }

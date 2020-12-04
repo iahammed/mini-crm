@@ -49,12 +49,12 @@ class ClientTest extends TestCase
     {
         // $this->withoutExceptionHandling();
         $this->actingAs(User::factory()->create());
-        // $attrtibutes = Client::factory()->raw(
-        //     ['avatar' => $this->faker->image('public/storage/avatars',100,100, null, false)]
-        // );
+        $attrtibutes = Client::factory()->raw(
+            ['avatar' => $this->faker->image('public/storage/avatars',200,200, null, false)]
+        );
         $attrtibutes = Client::factory()->raw();
-        $this->post(route('client.store'), $attrtibutes);
-        $this->assertDatabaseHas('clients', $attrtibutes);
+        $returnedData = $this->post(route('client.store'), $attrtibutes);
+        $this->assertDatabaseHas('clients',$returnedData);
         $this->get(route('client.index'))->assertSee($attrtibutes['first_name']);
     }
     

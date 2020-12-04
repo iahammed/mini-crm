@@ -63,7 +63,7 @@ class Client extends Model
 
     public function photopath()
     {
-        return $this->avatar;
+        return '/' . $this->avatar;
     }
 
 }

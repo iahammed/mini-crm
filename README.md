@@ -30,6 +30,14 @@ Front-end
 
 ## run on your local system
 
+### For Laravel 
+> php artisan serve (form root directory)
+
+### For VUE SPA 
+SPA is not finish yet! work in progress.
+> npm run dev (form root directory)
+
+
 
 
 
