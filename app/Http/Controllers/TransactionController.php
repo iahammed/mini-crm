@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Transaction;
+use App\Models\Client;
+
 
 class TransactionController extends Controller
 {
@@ -15,7 +17,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions =  Transaction::paginate(10);;
+        $transactions =  Transaction::paginate(10);
         return view('transaction.index', compact('transactions'));
     }
 
@@ -26,7 +28,13 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        //
+        $clients = Client::all();
+        // check if the client model have value
+        if(empty($clients->first())){
+            return redirect()->route('client.create')
+            ->withErrors(['client' => 'Please add atleast one client to have transaction']);
+        }
+        return view('transaction.create', compact('clients'));
     }
 
     /**
@@ -36,46 +44,38 @@ class TransactionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        // Validate
+    {        
         $validatedData = $request->validate([
             'client_id'         => ['required', 'max:50'],
             'transaction_date'  => ['required', 'max:50'],
-            'amount'            => ['required', 'unique:clients'],
+            'amount'            => ['required', 'numeric'],
         ]);
-
-        // dd($validatedData->transaction_date);
-
-        // Persist Data
+        $validatedData['amount'] = $this->validateTransactionAmount($request->submit, $request->client_id, $request->amount);
         Transaction::create($validatedData);
-
-        // Redirect
-
         return redirect ('/transaction');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  App\Models\Transaction $transaction
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Transaction $transaction)
     {
-        $transaction = Transaction::findOrFail($id);
-
-        return view('transaction.detail', compact('transaction'));
+        return view('transaction.detail', ['transaction' => $transaction]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  App\Models\Transaction $transaction
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Transaction $transaction)
     {
-        //
+        $clients = Client::all();
+        return view('transaction.edit', compact('transaction', 'clients'));
     }
 
     /**
@@ -85,19 +85,49 @@ class TransactionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Transaction $transaction)
     {
-        //
+        $validatedData = $request->validate([
+            'client_id'         => ['required', 'max:50'],
+            'transaction_date'  => ['required', 'max:50'],
+            'amount'            => ['required', 'numeric'],
+        ]);
+
+        $validatedData['amount'] = $this->validateTransactionAmount($request->submit, $request->client_id, $request->amount);
+        $transaction->update($validatedData);
+        return redirect()->route('transaction.index')
+            ->with('success', 'Transaction updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  App\Models\Transaction $transaction
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Transaction $transaction)
     {
-        //
+        $transaction->delete();
+        return redirect()->route('transaction.index')
+            ->with('success', 'Transaction deleted successfully');
+
     }
+    /**
+     * @param str $action
+     * @param int $client
+     * @param number $amount
+     * @return redirection 
+     * @return number $amount 
+     */
+    public function validateTransactionAmount($action, $client, $amount)
+    {
+        if($action === "Withdraw"){
+            if((Client::findOrFail($client)->currentBalance() - $amount) < 0 ){
+                return back()->withErrors(['amount' => 'Not enough fund']); 
+            }
+            return $validatedData['amount'] = - $validatedData['amount'];
+        }
+        return $amount;
+    }
+
 }

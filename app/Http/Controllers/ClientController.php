@@ -25,7 +25,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        return view('client.create');
     }
 
     /**
@@ -40,38 +40,38 @@ class ClientController extends Controller
         $validatedData = $request->validate([
             'first_name'    => ['required', 'max:50'],
             'last_name'     => ['required', 'max:50'],
-            'email'         => ['required', 'unique:clients'],
-            'avatar'        => ['required', 'max:50'],
+            'email'         => ['required', 'email', 'unique:clients'],
+            // 'avatar'        => ['required', 'file','dimensions: min_width = 100, min_height = 100'],
+            'avatar'        => ['required'],
         ]);
-
-
-        // persiste it
+        $validatedData['avatar'] = request('avatar')->store('public');
+        // $validatedData['avatar'] = $request->avatar->getClientOriginalName();
         Client::create($validatedData);
         // redirect
-        return redirect('/client');
+        return redirect()->route('client.index')
+            ->with('success', 'Client created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Client $client
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Client $client)
     {
-        $client = Client::findOrFail($id);
         return view('client.detail', compact('client'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Client $client
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Client $client)
     {
-        //
+        return view('client.edit', compact('client'));
     }
 
     /**
@@ -81,19 +81,33 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Client $client)
     {
-        //
+        $validatedData = $request->validate([
+            'first_name'    => ['max:50'],
+            'last_name'     => ['max:50'],
+            'email'         => ['email'],
+            // 'avatar'        => ['required', 'file','dimensions: min_width = 100, min_height = 100'],
+            // 'avatar'        => ['required'],
+        ]);
+        $client->update($validatedData);
+
+        return redirect()->route('client.index')
+            ->with('success', 'Client updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Client $client
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Client $client)
     {
-        //
+        $client->delete();
+
+        return redirect()->route('client.index')
+            ->with('success', 'Client deleted successfully');
+        
     }
 }

@@ -26,7 +26,8 @@ class ClientFactory extends Factory
             'first_name'    => $this->faker->firstName,
             'last_name'     => $this->faker->lastName,
             'email'         => $this->faker->unique()->safeEmail,
-            'avatar'        => '/public/avatar/'. Str::random(5). '.jpg',
+            // 'avatar'        => $this->faker->image('storage/app/public',100,100, null, false),
+            'avatar'        => '/'. Str::random(5) . '.jpg',
         ];
     }
 }

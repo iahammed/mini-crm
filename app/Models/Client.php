@@ -33,7 +33,7 @@ class Client extends Model
     {
         return $this->first_name . ' ' . $this->last_name;
     }
-
+    
     /**
      * Get the Transactions for the client.
      */
@@ -42,6 +42,28 @@ class Client extends Model
         return $this->hasMany('App\Models\Transaction');
     }
 
+    /**
+     * Scope a query to only include active users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActivity($query, $take)
+    {
+        return $query->withCount('transactions')
+                    ->withSum('transactions', 'amount')
+                    // ->latest()
+                    ->limit($take);
+    }
 
+    public function currentBalance()
+    {
+        return $this->loadSum('transactions','amount')->transactions_sum_amount;
+    }
+
+    public function photopath()
+    {
+        return $this->avatar;
+    }
 
 }

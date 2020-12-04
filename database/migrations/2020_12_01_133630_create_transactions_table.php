@@ -15,7 +15,11 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id');
+            // $table->foreignId('client_id')->onDelete('cascade');
+            $table->foreignId('client_id')
+                    ->constrained('clients')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
             $table->date('transaction_date');
             $table->decimal('amount', 8, 2);
             $table->timestamps();
