@@ -89,8 +89,6 @@ class ClientController extends Controller
             'first_name'    => ['max:50'],
             'last_name'     => ['max:50'],
             'email'         => ['email'],
-            // 'avatar'        => ['required', 'file','dimensions: min_width = 100, min_height = 100'],
-            // 'avatar'        => ['required'],
         ]);
         $client->update($validatedData);
 
@@ -111,4 +109,15 @@ class ClientController extends Controller
         return redirect()->route('client.index')
             ->with('success', 'Client deleted successfully');
     }
+
+    /**
+     * spa(auth:sanctum) returns 
+     * @return json
+     */
+    public function apiindex()
+    {
+        return $clients = Client::all();   
+    }
+
+    
 }

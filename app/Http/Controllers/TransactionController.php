@@ -129,5 +129,13 @@ class TransactionController extends Controller
         }
         return $amount;
     }
+    /**
+     * spa(auth:sanctum) returns 
+     * @return json
+     */
+    public function apiindex()
+    {
+        return $transactions =  Transaction::all();
+    }
 
 }
