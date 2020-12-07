@@ -2160,8 +2160,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2194,15 +2192,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.withCredentials = true;
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       secret: [],
       formData: {
-        email: 'admin@admin.com',
-        password: 'password'
+        email: '',
+        password: ''
       }
     };
   },
@@ -2210,8 +2206,8 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.withCredentials = true;
     handlelogin: function handlelogin() {
       var _this = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/sanctum/csrf-cookie').then(function (response) {
-        axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/login', _this.formData).then(function (response) {
+      axios.get('/sanctum/csrf-cookie').then(function (response) {
+        axios.post('/api/login', _this.formData).then(function (response) {
           _this.$store.commit('login', response.data);
 
           _this.$router.push('/dashboard');
